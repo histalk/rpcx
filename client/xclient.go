@@ -237,6 +237,8 @@ func (c *xClient) getCachedClient(k string) (RPCClient, error) {
 			client = &Client{
 				option:  c.option,
 				Plugins: c.Plugins,
+				xClient: c,
+				name:    k,
 			}
 			err := client.Connect(network, addr)
 			if err != nil {

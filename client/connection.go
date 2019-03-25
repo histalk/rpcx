@@ -17,6 +17,10 @@ type makeConnFn func(c *Client, network, address string) (net.Conn, error)
 
 var makeConnMap = make(map[string]makeConnFn)
 
+func UpdateConnFnMap(name string, fn makeConnFn) {
+	makeConnMap[name] = fn
+}
+
 // Connect connects the server via specified network.
 func (c *Client) Connect(network, address string) error {
 	var conn net.Conn

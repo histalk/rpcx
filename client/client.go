@@ -92,6 +92,9 @@ type RPCClient interface {
 type Client struct {
 	option Option
 
+	xClient *xClient
+	name    string
+
 	Conn net.Conn
 	r    *bufio.Reader
 	//w    *bufio.Writer
@@ -578,6 +581,8 @@ func (client *Client) input() {
 	client.mutex.Unlock()
 	if err != nil && err != io.EOF && !closing {
 		log.Error("rpcx: client protocol error:", err)
+		delete(client.xClient.cachedClient, client.name)
+		client.Close()
 	}
 }
 

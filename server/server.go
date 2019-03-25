@@ -264,7 +264,7 @@ func (s *Server) serveConn(conn net.Conn) {
 				ss = size
 			}
 			buf = buf[:ss]
-			log.Errorf("serving %s panic error: %s, stack:\n %s", conn.RemoteAddr(), err, buf)
+			log.Errorf("[%s] serving %s panic error: %s, stack:\n %s", conn.RemoteAddr(), conn.RemoteAddr(), err, buf)
 		}
 		s.mu.Lock()
 		delete(s.activeConn, conn)
@@ -280,7 +280,7 @@ func (s *Server) serveConn(conn net.Conn) {
 			conn.SetWriteDeadline(time.Now().Add(d))
 		}
 		if err := tlsConn.Handshake(); err != nil {
-			log.Errorf("rpcx: TLS handshake error from %s: %v", conn.RemoteAddr(), err)
+			log.Errorf("[%s] rpcx: TLS handshake error from %s: %v", conn.RemoteAddr(), conn.RemoteAddr(), err)
 			return
 		}
 	}
@@ -298,11 +298,11 @@ func (s *Server) serveConn(conn net.Conn) {
 		req, err := s.readRequest(ctx, r)
 		if err != nil {
 			if err == io.EOF {
-				log.Infof("client has closed this connection: %s", conn.RemoteAddr().String())
+				log.Infof("[%s] client has closed this connection", conn.RemoteAddr().String())
 			} else if strings.Contains(err.Error(), "use of closed network connection") {
-				log.Infof("rpcx: connection %s is closed", conn.RemoteAddr().String())
+				log.Infof("[%s] rpcx: connection is closed", conn.RemoteAddr().String())
 			} else {
-				log.Warnf("rpcx: failed to read request: %v", err)
+				log.Warnf("[%s] rpcx: failed to read request: %v", conn.RemoteAddr().String(), err)
 			}
 			return
 		}

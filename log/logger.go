@@ -29,6 +29,9 @@ type Logger interface {
 
 	Panic(v ...interface{})
 	Panicf(format string, v ...interface{})
+
+	ErrorStack(v ...interface{})
+	ErrorfStack(format string, v ...interface{})
 }
 
 func SetLogger(logger Logger) {
@@ -79,4 +82,11 @@ func Panic(v ...interface{}) {
 }
 func Panicf(format string, v ...interface{}) {
 	l.Panicf(format, v...)
+}
+
+func ErrorStack(v ...interface{}) {
+	l.Error(v...)
+}
+func ErrorfStack(format string, v ...interface{}) {
+	l.Errorf(format, v...)
 }

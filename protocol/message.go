@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 
+	"github.com/smallnest/rpcx/log"
 	"github.com/smallnest/rpcx/util"
 )
 
@@ -407,23 +408,21 @@ func (m *Message) Decode(r io.Reader) error {
 		return err
 	}
 	l := binary.BigEndian.Uint32(*lenData)
+	if int(l) > 10*1024*1024 {
+		log.ErrorfStack("header:%v,    l:%d    int(l):%d    lenData:%v", m.Header, l, int(l), *lenData)
+	}
 	poolUint32Data.Put(lenData)
 
 	if MaxMessageLength > 0 && int(l) > MaxMessageLength {
 		return ErrMessageTooLong
 	}
 
-	totalL := int(l)
-	if cap(m.data) >= totalL { //reuse data
-		m.data = m.data[:totalL]
-	} else {
-		m.data = make([]byte, totalL)
-	}
-	data := m.data
+	data := make([]byte, int(l))
 	_, err = io.ReadFull(r, data)
 	if err != nil {
 		return err
 	}
+	m.data = data
 
 	n := 0
 	// parse servicePath

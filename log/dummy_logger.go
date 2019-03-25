@@ -37,3 +37,9 @@ func (l *dummyLogger) Panic(v ...interface{}) {
 
 func (l *dummyLogger) Panicf(format string, v ...interface{}) {
 }
+
+func (l *dummyLogger) ErrorStack(v ...interface{}) {
+}
+
+func (l *dummyLogger) ErrorfStack(format string, v ...interface{}) {
+}
