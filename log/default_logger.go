@@ -62,14 +62,6 @@ func (l *defaultLogger) Panicf(format string, v ...interface{}) {
 	l.Logger.Panicf(format, v...)
 }
 
-func (l *defaultLogger) ErrorStack(v ...interface{}) {
-	l.Output(calldepth, header(color.RedString("ERROR"), fmt.Sprint(v...)))
-}
-
-func (l *defaultLogger) ErrorfStack(format string, v ...interface{}) {
-	l.Output(calldepth, header(color.RedString("ERROR"), fmt.Sprintf(format, v...)))
-}
-
 func header(lvl, msg string) string {
 	return fmt.Sprintf("%s: %s", lvl, msg)
 }
